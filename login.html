@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPMS Login</title>
+<style>
+  :root {
+    --bg: #f4f6fb;
+    --card: #fff;
+    --accent: #1f6feb;
+    --accent-2: #0ea5a4;
+  }
+  body {
+    margin:0;
+    font-family:Inter, system-ui, Arial;
+    background: var(--bg);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+  }
+  .login-card {
+    background: var(--card);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow:0 6px 18px rgba(15,23,36,0.06);
+    width:300px;
+    text-align:center;
+  }
+  .login-card h2 {
+    margin-bottom:20px;
+  }
+  input {
+    width:100%;
+    padding:10px;
+    margin-bottom:12px;
+    border-radius:8px;
+    border:1px solid #e6edf6;
+  }
+  button {
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    background: var(--accent);
+    color:#fff;
+    font-weight:700;
+    cursor:pointer;
+  }
+  button:hover {
+    background: var(--accent-2);
+  }
+</style>
+</head>
+<body>
+
+<div class="login-card">
+  <h2>SPMS Login</h2>
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+</div>
+
+<script>
+function login(){
+  // Prototype: مباشرة إلى dashboard
+  window.location.href = "prototybe.html";
+}
+</script>
+
+</body>
+</html>

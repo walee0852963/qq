@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>SPMS Prototype — Student / Lecturer / Admin</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{
+      --bg:#f4f6fb; --card:#fff; --accent:#1f6feb; --muted:#6b7280;
+      --sidebar:#0f1724; --accent-2:#0ea5a4;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter, system-ui, Arial;background:var(--bg);color:#0f1724}
+    header{height:64px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 20px;box-shadow:0 1px 3px rgba(15,23,36,0.06)}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+    .role-switch{display:flex;gap:10px;align-items:center}
+    select{padding:8px;border-radius:8px;border:1px solid #e6edf6;background:#fff}
+    /* .layout{display:flex;min-height:calc(100vh - 64px)} */
+    aside {
+  width: 100%;
+  background: var(--sidebar);
+  color: #fff;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* العنوان */
+aside h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+/* الروابط */
+nav {
+  display: flex;
+  gap: 10px;
+}
+
+nav a {
+  display: block;
+  color: #e6eefb;
+  text-decoration: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin: 0;
+}
+
+nav a.active,
+nav a:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* المحتوى */
+main {
+  padding: 24px;
+}
+
+/*     
+    aside{width:230px;background:var(--sidebar);color:#fff;padding:20px}
+    aside h3{margin:0 0 10px;font-size:16px}
+    nav a{display:block;color:#e6eefb;text-decoration:none;padding:10px;border-radius:8px;margin-bottom:6px}
+    nav a.active, nav a:hover{background:rgba(255,255,255,0.06)}
+    main{flex:1;padding:24px} */
+    .card{background:var(--card);padding:18px;border-radius:10px;box-shadow:0 6px 18px rgba(15,23,36,0.06);margin-bottom:18px}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .grid-2{grid-template-columns:repeat(2,1fr)}
+    h2{margin:0 0 10px}
+    .stat{font-size:28px;font-weight:700}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;border-bottom:1px solid #eef2f7;text-align:left}
+    .btn{padding:8px 12px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer}
+    .btn.secondary{background:#f3f4f6;color:#111;border:1px solid #e6eef6}
+    form .row{display:flex;gap:8px;margin-bottom:8px}
+    input,textarea,select{padding:8px;border-radius:6px;border:1px solid #e6edf6;width:100%}
+    .hidden{display:none}
+    .muted{color:var(--muted);font-size:13px}
+    .actions{display:flex;gap:8px;align-items:center}
+    .small{font-size:13px;padding:6px 8px}
+    @media(max-width:900px){
+      .grid{grid-template-columns:1fr}
+      aside{display:none}
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">SP</div>
+    <div>
+      <div style="font-weight:700">SPMS Prototype</div>
+      <div class="muted" style="font-size:13px">Student Project Management System</div>
+    </div>
+  </div>
+
+  <div class="role-switch">
+    <div class="muted">Role:</div>
+    <select id="roleSelect">
+      <option value="student">Student</option>
+      <option value="lecturer">Lecturer</option>
+      <option value="admin">Admin</option>
+    </select>
+    <div style="width:12px"></div>
+    <button  class="btn secondary" id="logoutBtn" >Logout</button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside id="sidebar">
+    <h3 id="sidebarRole">Student Dashboard</h3>
+    <nav id="menu">
+      <!-- menu filled by JS -->
+    </nav>
+    <div style="margin-top:16px">
+      <div class="muted">Quick Links</div>
+      <a href="#" id="linkProfile">Profile</a>
+      <a href="#" id="linkHelp">Help</a>
+    </div>
+  </aside>
+
+  <main>
+    <!-- Pages -->
+    <section id="page-dashboard" class="page card">
+      <h2>Dashboard</h2>
+      <div class="grid" id="dashboard-stats">
+        <!-- cards filled by JS -->
+      </div>
+      <div class="card">
+        <h3>Recent items</h3>
+        <table id="recentTable">
+          <thead><tr><th>Type</th><th>Title / User</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="page-projects" class="page hidden">
+      <div class="card">
+        <h2>Projects</h2>
+        <div class="actions" style="margin-bottom:12px">
+          <button class="btn" id="newProposalBtn">New Proposal</button>
+          <div class="muted">You can submit or view proposals and uploads here.</div>
+        </div>
+        <table id="projectsTable">
+          <thead><tr><th>ID</th><th>Title</th><th>Type</th><th>Owner</th><th>Status</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="page-upload" class="page hidden">
+      <div class="card">
+        <h2>Upload / Correction</h2>
+        <form id="uploadForm">
+          <div class="row">
+            <input type="text" id="uploadTitle" placeholder="Project title" required>
+            <select id="uploadType"><option>Software</option><option>Research</option><option>Hardware</option></select>
+          </div>
+          <div class="row">
+            <textarea id="uploadDesc" placeholder="Description" rows="3"></textarea>
+          </div>
+          <div class="row">
+            <input type="file" id="uploadFile">
+            <input type="text" id="uploadLecturer" placeholder="Supervisor (lecturerID)">
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn">Upload</button>
+            <button type="button" class="btn secondary" id="cancelUpload">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section id="page-announcements" class="page hidden">
+      <div class="card">
+        <h2>Announcements</h2>
+        <div id="annList"></div>
+        <div style="margin-top:12px">
+          <h4>Create Announcement</h4>
+          <form id="announceForm">
+            <div class="row"><input id="annTitle" placeholder="Header"></div>
+            <div class="row"><textarea id="annContent" rows="3" placeholder="Content"></textarea></div>
+            <div class="row"><input id="annTarget" placeholder="Target (all / students / lecturers)"></div>
+            <div class="actions"><button class="btn" type="submit">Post</button></div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section id="page-grading" class="page hidden">
+      <div class="card">
+        <h2>Grading</h2>
+        <table id="gradingTable">
+          <thead><tr><th>Student</th><th>Project</th><th>Score</th><th>Action</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="page-users" class="page hidden">
+      <div class="card">
+        <h2>Users Management (Admin)</h2>
+        <div class="grid grid-2">
+          <div>
+            <h4>Create User</h4>
+            <form id="createUserForm">
+              <div class="row">
+                <input id="uID" placeholder="ID">
+                <select id="uRole"><option value="student">Student</option><option value="lecturer">Lecturer</option><option value="admin">Admin</option></select>
+              </div>
+              <div class="row"><input id="uFirst" placeholder="First name"></div>
+              <div class="row"><input id="uLast" placeholder="Last name"></div>
+              <div class="row"><input id="uEmail" placeholder="Email"></div>
+              <div class="actions"><button class="btn" type="submit">Create</button></div>
+            </form>
+          </div>
+          <div>
+            <h4>Existing Users</h4>
+            <table id="usersTable"><thead><tr><th>ID</th><th>Name</th><th>Role</th><th>Action</th></tr></thead><tbody></tbody></table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="page-profile" class="page hidden">
+      <div class="card">
+        <h2>Profile</h2>
+        <form id="profileForm">
+          <div class="row"><input id="profileID" placeholder="ID" readonly></div>
+          <div class="row"><input id="profileName" placeholder="Full name"></div>
+          <div class="row"><input id="profileEmail" placeholder="Email"></div>
+          <div class="actions"><button class="btn" type="submit">Save Profile</button></div>
+        </form>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+/* ---------- Prototype Data (in-memory) ---------- */
+const state = {
+  role: 'student',
+  user: { id: 's123', name: 'waleed ali', email: 'waleedAli@uni.edu' },
+  users: [
+    { id:'s123', name:'waleed ali', role:'student' },
+    { id:'l101', name:'Dr. Ali', role:'lecturer' },
+    { id:'a01', name:'Admin User', role:'admin' }
+  ],
+  announcements: [
+    { id:1, title:'Welcome', content:'Welcome to SPMS', target:'all', date:'2025-01-01' }
+  ],
+  projects: [
+    { id:1, title:'Smart Campus', type:'Software', owner:'waleed ali', status:'Pending' },
+    { id:2, title:'SPMS', type:'web application', owner:'ahmed ali', status:'Approved' }
+  ],
+  grading: [
+    { id:1, student:'s123', project:'SPMS', score:null }
+  ]
+};
+
+/* ---------- UI Helpers ---------- */
+const pages = {
+  student: ['dashboard','projects','upload','announcements','profile'],
+  lecturer: ['dashboard','projects','grading','announcements','profile'],
+  admin: ['dashboard','projects','users','announcements','profile']
+};
+
+const menuLabels = {
+  dashboard: 'Dashboard', projects:'Projects', upload:'Upload Project',
+  announcements:'Announcements', grading:'Grading', users:'Users', profile:'Profile'
+};
+
+function $(sel){return document.querySelector(sel)}
+function $all(sel){return Array.from(document.querySelectorAll(sel))}
+
+/* ---------- Render Menu based on role ---------- */
+function renderMenu(){
+  const role = state.role;
+  $('#sidebarRole').textContent = role.charAt(0).toUpperCase()+role.slice(1)+' Dashboard';
+  const menu = $('#menu'); menu.innerHTML='';
+  pages[role].forEach(p=>{
+    const a=document.createElement('a');
+    a.href='#'; a.dataset.page=p; a.textContent = menuLabels[p] || p;
+    a.addEventListener('click', (e)=>{ e.preventDefault(); navigateTo(p) });
+    menu.appendChild(a);
+  });
+  // activate first item
+  [...menu.children].forEach((a,i)=>{ if(i===0) a.classList.add('active')});
+}
+
+/* ---------- Navigation ---------- */
+function hideAllPages(){ $all('.page').forEach(el=>el.classList.add('hidden')) }
+function navigateTo(page){
+  hideAllPages();
+  $('#page-'+page).classList.remove('hidden');
+  // set active menu item
+  $all('#menu a').forEach(a=>a.classList.toggle('active', a.dataset.page===page));
+  // custom renderers
+  if(page==='dashboard') renderDashboard();
+  if(page==='projects') renderProjects();
+  if(page==='announcements') renderAnnouncements();
+  if(page==='grading') renderGrading();
+  if(page==='users') renderUsers();
+  if(page==='profile') renderProfile();
+}
+
+/* ---------- Dashboard ---------- */
+function renderDashboard(){
+  const stats = {
+    student: [{k:'My Projects',v: state.projects.filter(p=>p.owner===state.user.id).length},
+              {k:'Announcements',v: state.announcements.length},
+              {k:'Pending Corrections',v: state.projects.filter(p=>p.status==='Pending').length}],
+    lecturer: [{k:'Assigned Projects',v: state.projects.length},
+               {k:'To Grade',v: state.grading.filter(g=>g.score===null).length},
+               {k:'Announcements',v: state.announcements.length}],
+    admin: [{k:'Total Students',v: state.users.filter(u=>u.role==='student').length},
+            {k:'Total Lecturers',v: state.users.filter(u=>u.role==='lecturer').length},
+            {k:'Total Projects',v: state.projects.length}]
+  };
+  const arr = stats[state.role] || [];
+  const container = $('#dashboard-stats'); container.innerHTML='';
+  arr.forEach(s=>{
+    const card = document.createElement('div'); card.className='card';
+    card.innerHTML = `<div class="muted">${s.k}</div><div class="stat">${s.v}</div>`;
+    container.appendChild(card);
+  });
+  // recent items
+  const tbody = $('#recentTable tbody'); tbody.innerHTML='';
+  state.projects.slice(0,6).forEach(p=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML = `<td>Project</td><td>${p.title}</td><td>${p.status}</td><td><button class="small" onclick="alert('Open ${p.title}')">Open</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+/* ---------- Projects ---------- */
+function renderProjects(){
+  const tbody = $('#projectsTable tbody'); tbody.innerHTML='';
+  state.projects.forEach(p=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML = `<td>${p.id}</td><td>${p.title}</td><td>${p.type}</td><td>${p.owner}</td><td>${p.status}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+/* ---------- Upload ---------- */
+$('#uploadForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const title = $('#uploadTitle').value || 'Untitled';
+  const type = $('#uploadType').value;
+  const id = state.projects.length+1;
+  state.projects.unshift({id,title,type,owner:state.user.id,status:'Pending'});
+  alert('Uploaded: '+title);
+  $('#uploadForm').reset();
+  navigateTo('projects');
+});
+
+/* ---------- Announcements ---------- */
+function renderAnnouncements(){
+  const list = $('#annList'); list.innerHTML='';
+  state.announcements.forEach(a=>{
+    const el=document.createElement('div'); el.className='card';
+    el.innerHTML = `<strong>${a.header}</strong><div class="muted">${a.date}</div><p>${a.content}</p>`;
+    list.appendChild(el);
+  });
+}
+$('#announceForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const header = $('#annTitle').value, content = $('#annContent').value, target = $('#annTarget').value||'all';
+  const id = state.announcements.length+1; const date = new Date().toLocaleString();
+  state.announcements.unshift({id, header, content, target, date});
+  $('#announceForm').reset();
+  navigateTo('announcements');
+});
+
+/* ---------- Grading ---------- */
+function renderGrading(){
+  const tbody = $('#gradingTable tbody'); tbody.innerHTML='';
+  state.grading.forEach(g=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML = `<td>${g.student}</td><td>${g.project}</td><td>${g.score ?? '-'}</td>
+      <td><button class="small" onclick="openGrade(${g.id})">Grade</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+window.openGrade = function(id){
+  const g = state.grading.find(x=>x.id===id);
+  const score = prompt('Enter score (0-100):', g.score ?? '80');
+  if(score!==null){
+    g.score = Number(score);
+    alert('Saved.');
+    renderGrading();
+    renderDashboard();
+  }
+}
+
+/* ---------- Users (Admin) ---------- */
+function renderUsers(){
+  const tbody = $('#usersTable tbody'); tbody.innerHTML='';
+  state.users.forEach(u=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML = `<td>${u.id}</td><td>${u.name}</td><td>${u.role}</td><td><button class="small" onclick="deleteUser('${u.id}')">Delete</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+$('#createUserForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const id = $('#uID').value || ('u'+(state.users.length+1));
+  const role = $('#uRole').value; const name = $('#uFirst').value+' '+$('#uLast').value || 'New User';
+  state.users.push({id,name,role});
+  $('#createUserForm').reset();
+  renderUsers();
+});
+window.deleteUser = function(id){
+  if(!confirm('Delete user '+id+'?')) return;
+  state.users = state.users.filter(u=>u.id!==id);
+  renderUsers();
+}
+
+/* ---------- Profile ---------- */
+function renderProfile(){
+  $('#profileID').value = state.user.id;
+  $('#profileName').value = state.user.name;
+  $('#profileEmail').value = state.user.email;
+}
+$('#profileForm').addEventListener('submit', function(e){ e.preventDefault(); alert('Profile saved (prototype)') })
+
+/* ---------- Role switching ---------- */
+$('#roleSelect').addEventListener('change', function(){
+  state.role = this.value;
+  if(state.role==='student') state.user = {id:'s123', name:'waleed ali', email:'student@uni.edu'};
+  if(state.role==='lecturer') state.user = {id:'l101', name:'Dr. Ali', email:'ali@uni.edu'};
+  if(state.role==='admin') state.user = {id:'a01', name:'Admin User', email:'admin@uni.edu'};
+  renderMenu(); navigateTo(pages[state.role][0]);
+});
+$('#logoutBtn').addEventListener('click',  ()=>{
+  window.location.href = 'login.html'; // الانتقال لصفحة تسجيل الدخول
+});
+/* ---------- Init ---------- */
+renderMenu();
+navigateTo('dashboard');
+renderAnnouncements();
+renderProjects();
+renderGrading();
+renderUsers();
+
+</script>
+</body>
+</html>
