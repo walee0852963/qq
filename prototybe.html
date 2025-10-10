@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <title>SPMS Prototype — Student / Lecturer / Admin</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <style>
+  <!-- <style>
     :root{
       --bg:#f4f6fb; --card:#fff; --accent:#1f6feb; --muted:#6b7280;
       --sidebar:#0f1724; --accent-2:#0ea5a4;
@@ -83,7 +83,124 @@ main {
       .grid{grid-template-columns:1fr}
       aside{display:none}
     }
-  </style>
+  </style> -->
+  <style>
+  :root{
+    --bg:#f4f6fb; --card:#fff; --accent:#1f6feb; --muted:#6b7280;
+    --sidebar:#0f1724; --accent-2:#0ea5a4;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Inter, system-ui, Arial;
+    background:var(--bg);
+    color:#0f1724;
+  }
+
+  header{
+    height:64px;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 20px;
+    box-shadow:0 1px 3px rgba(15,23,36,0.06);
+  }
+
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{
+    width:36px;height:36px;border-radius:8px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-weight:700;
+  }
+
+  .role-switch{display:flex;gap:10px;align-items:center}
+  select{padding:8px;border-radius:8px;border:1px solid #e6edf6;background:#fff}
+
+  /* الشريط الأفقي */
+  aside{
+    width:100%;
+    background:var(--sidebar);
+    color:#fff;
+    padding:14px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+
+  aside h3{
+    margin:0;
+    font-size:16px;
+  }
+
+  nav{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+
+  nav a{
+    display:block;
+    color:#e6eefb;
+    text-decoration:none;
+    padding:8px 12px;
+    border-radius:8px;
+  }
+
+  nav a.active, nav a:hover{
+    background:rgba(255,255,255,0.1);
+  }
+
+  main{padding:24px}
+
+  /* الكروت والجداول */
+  .card{
+    background:var(--card);
+    padding:18px;
+    border-radius:10px;
+    box-shadow:0 6px 18px rgba(15,23,36,0.06);
+    margin-bottom:18px;
+  }
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(240px,1fr));gap:16px}
+  .grid-2{grid-template-columns:repeat(auto-fit, minmax(300px,1fr));gap:16px}
+
+  h2{margin:0 0 10px}
+  .stat{font-size:28px;font-weight:700}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{padding:10px;border-bottom:1px solid #eef2f7;text-align:left;word-break:break-word}
+
+  .btn{padding:8px 12px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-size:14px}
+  .btn.secondary{background:#f3f4f6;color:#111;border:1px solid #e6eef6}
+
+  form .row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+  input,textarea,select{padding:8px;border-radius:6px;border:1px solid #e6edf6;width:100%}
+  .hidden{display:none}
+  .muted{color:var(--muted);font-size:13px}
+  .actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .small{font-size:13px;padding:6px 8px}
+
+  /* ----------- تصميم متجاوب ----------- */
+  @media(max-width:900px){
+    header{flex-direction:column;align-items:flex-start;gap:8px;height:auto;padding:12px}
+    .role-switch{width:100%;justify-content:space-between}
+    aside{flex-direction:column;align-items:flex-start}
+    nav{width:100%;flex-wrap:wrap;gap:6px}
+    nav a{padding:8px 10px;font-size:14px}
+    main{padding:16px}
+  }
+
+  @media(max-width:600px){
+    table th, table td{font-size:12px;padding:6px}
+    .btn{padding:6px 10px;font-size:12px}
+    h2{font-size:18px}
+  }
+</style>
+
 </head>
 <body>
 
@@ -116,8 +233,8 @@ main {
     </nav>
     <div style="margin-top:16px">
       <div class="muted">Quick Links</div>
-      <a href="#" id="linkProfile">Profile</a>
-      <a href="#" id="linkHelp">Help</a>
+     <button ><a href="https://advancedacademy.edu.eg/Katamia/RootPages/Default.aspx" id="linkProfile">ِِِAbout</a></button>
+     <button> <a href="https://www.facebook.com/motatawera.kattamia.officialpage" id="linkHelp">Contact Us</a>  </button>
     </div>
   </aside>
 
@@ -246,16 +363,37 @@ const state = {
   role: 'student',
   user: { id: 's123', name: 'waleed ali', email: 'waleedAli@uni.edu' },
   users: [
+    { id:'l101', name:'Dr. Ali Samy', role:'lecturer' },
+    { id:'a01', name:'Admin User', role:'admin' },
     { id:'s123', name:'waleed ali', role:'student' },
-    { id:'l101', name:'Dr. Ali', role:'lecturer' },
-    { id:'a01', name:'Admin User', role:'admin' }
+    { id:'s123', name:'Rana Sayd', role:'student' },
+    { id:'s153', name:'yomna Mohamed', role:'student' },
+    { id:'s174', name:'mahmoud salah', role:'student' },
+    { id:'s143', name:'ahmed shadad', role:'student' },
+    { id: 's124', name: 'Sara Mahmoud', role: 'student' },
+    { id: 's125', name: 'Omar Youssef', role: 'student' },
+     { id: 's104', name: 'Nour El-Din Mostafa', role: 'student' },
+  { id: 's105', name: 'Hager Ali', role: 'student' },
+  { id: 's106', name: 'Mohamed Tamer', role: 'student' },
+  { id: 's107', name: 'Eman Samir', role: 'student' },
+  { id: 's108', name: 'Mostafa Adel', role: 'student' },
+  { id: 's109', name: 'Yasmin Khaled', role: 'student' },
+  { id: 's110', name: 'Abdullah Reda', role: 'student' }
   ],
   announcements: [
     { id:1, title:'Welcome', content:'Welcome to SPMS', target:'all', date:'2025-01-01' }
   ],
   projects: [
-    { id:1, title:'Smart Campus', type:'Software', owner:'waleed ali', status:'Pending' },
-    { id:2, title:'SPMS', type:'web application', owner:'ahmed ali', status:'Approved' }
+    { id:1, title:'Smart Campus', type:'Software', owner:'mahmoud salah', status:'Pending' },
+    { id:2, title:'SPMS', type:'web application', owner:'waleed ali', status:'Approved' },
+    { id: 3, title: 'E-Commerce Platform', type: 'Web Application', owner: 'Rana sayd', status: 'Under Review' },
+  { id: 4, title: 'Smart Traffic System', type: 'IoT', owner: 'Ahmed shadad', status: 'Approved' },
+  { id: 5, title: 'Mobile Fitness Tracker', type: 'Mobile App', owner: 'yomna mohamed', status: 'Rejected' },
+  { id: 6, title: 'Library Management System', type: 'Desktop App', owner: 'Hassan Fathy', status: 'Pending' },
+  { id: 7, title: 'Online Exam Portal', type: 'Web Application', owner: 'Nour El-Din', status: 'Approved' },
+  { id: 8, title: 'Smart Home Controller', type: 'IoT', owner: 'Laila Tarek', status: 'Under Review' },
+  { id: 9, title: 'Hospital Queue System', type: 'Web Application', owner: 'Ali Mohamed', status: 'Approved' },
+  { id: 10, title: 'Student Attendance Tracker', type: 'Mobile App', owner: 'Rania Saad', status: 'Pending' }
   ],
   grading: [
     { id:1, student:'s123', project:'SPMS', score:null }
@@ -438,7 +576,7 @@ $('#roleSelect').addEventListener('change', function(){
   renderMenu(); navigateTo(pages[state.role][0]);
 });
 $('#logoutBtn').addEventListener('click',  ()=>{
-  window.location.href = 'index.html'; // الانتقال لصفحة تسجيل الدخول
+  window.location.href = 'login.html'; // الانتقال لصفحة تسجيل الدخول
 });
 /* ---------- Init ---------- */
 renderMenu();
@@ -451,4 +589,3 @@ renderUsers();
 </script>
 </body>
 </html>
-
